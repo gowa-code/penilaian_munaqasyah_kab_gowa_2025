@@ -39,7 +39,7 @@
           </div>
 				 <div class="input-box">
     <label for="Nilai" class="form-label">Nilai</label>
-    <input type="number" id="Nilai" name="Nilai" min="70" max="99" class="form-control" placeholder="Masukkan nilai dari 70 - 99" required>
+    <input type="number" id="Nilai" name="Nilai" min="0" max="99" class="form-control" placeholder="Masukkan nilai dari 0 - 99" required>
 </div>
 
 <script>
@@ -53,8 +53,8 @@
 
         // Validasi jika nilai berada di luar rentang
         const value = parseInt(this.value, 10);
-        if (value < 70 || value > 99) {
-            this.setCustomValidity('Nilai harus antara 70 dan 99.');
+        if (value < 0 || value > 99) {
+            this.setCustomValidity('Nilai harus antara 0 sampai 99.');
         } else {
             this.setCustomValidity('');
         }
