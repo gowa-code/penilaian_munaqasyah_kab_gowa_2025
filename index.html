@@ -38,9 +38,28 @@
 
           </div>
 				 <div class="input-box">
-           <label for="Nilai" class="form-label">Nilai</label>
-              <input type="text" id="Nilai" name="Nilai" class="form-control" placeholder="Masukan nilai dari 70 - 99" onsubmit="return true">
-          </div>
+    <label for="Nilai" class="form-label">Nilai</label>
+    <input type="number" id="Nilai" name="Nilai" min="70" max="99" class="form-control" placeholder="Masukkan nilai dari 70 - 99" required>
+</div>
+
+<script>
+    const inputBox = document.getElementById('Nilai');
+
+    inputBox.addEventListener('input', function () {
+        // Batasi nilai menjadi maksimal 2 digit
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2); // Hanya ambil 2 karakter pertama
+        }
+
+        // Validasi jika nilai berada di luar rentang
+        const value = parseInt(this.value, 10);
+        if (value < 70 || value > 99) {
+            this.setCustomValidity('Nilai harus antara 70 dan 99.');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+</script>
         <div class="button">
           <input type="submit" value="Kirim Nilai">
         </div>
