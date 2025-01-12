@@ -34,6 +34,23 @@
             display: none;
             z-index: 999;
         }
+
+        /* Menata container tombol agar sejajar */
+        .button-container {
+            display: flex; /* Menggunakan Flexbox untuk sejajarkan elemen */
+            gap: 10px; /* Menambahkan jarak antar tombol */
+            width: 100%; /* Agar container tombol memenuhi lebar penuh */
+        }
+
+        /* Menata tombol agar masing-masing mengambil setengah dari lebar container */
+        .button {
+            flex: 1; /* Tombol akan membagi ruang container secara merata */
+        }
+
+        /* Agar tombol mengambil 100% lebar kontainer dalam button */
+        .button button {
+            width: 100%; /* Tombol akan mengambil seluruh lebar kontainer */
+        }
     </style>
 </head>
 <body>
@@ -67,11 +84,17 @@
                     <input type="submit" value="Kirim Nilai" class="btn btn-primary">
                 </div>
             </form>
-            
-            <!-- Tombol Cek Nilai -->
-            <div class="button">
-                <button id="cekNilai" class="btn btn-secondary" onclick="window.open('https://docs.google.com/spreadsheets/d/e/2PACX-1vQIAC8not7sj6ZtXKd2dSUxq-oABcpsi93CP_qTm8QUfQz9eEI_Q5e6nqd1P9W27ukNW1Gh41ppcAe2/pubhtml?gid=615379289&single=true', '_blank')">Cek Nilai</button>
+
+            <!-- Tombol Cek Nilai Kelompok A dan Kelompok B -->
+            <div class="button-container">
+                <div class="button">
+                    <button id="cekNilaiA" class="btn btn-secondary" onclick="window.open('https://docs.google.com/spreadsheets/d/e/2PACX-1vQIAC8not7sj6ZtXKd2dSUxq-oABcpsi93CP_qTm8QUfQz9eEI_Q5e6nqd1P9W27ukNW1Gh41ppcAe2/pubhtml?gid=2042686669&single=true', '_blank')">Cek Nilai Kelompok A</button>
+                </div>
+                <div class="button">
+                    <button id="cekNilaiB" class="btn btn-secondary" onclick="window.open('https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vQIAC8not7sj6ZtXKd2dSUxq-oABcpsi93CP_qTm8QUfQz9eEI_Q5e6nqd1P9W27ukNW1Gh41ppcAe2/pubhtml?gid=231585304&single=true&pli=1', '_blank')">Cek Nilai Kelompok B</button>
+                </div>
             </div>
+
         </div>
     </div>
 
