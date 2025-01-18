@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>PENILAIAN MUNAQASYAH TPQ GOWA - TIM A</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Dialog Box */
+        #dialogBox {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        /* Overlay for Background */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        /* Menata container tombol agar sejajar */
+        .button-container {
+            display: flex; /* Menggunakan Flexbox untuk sejajarkan elemen */
+            gap: 10px; /* Menambahkan jarak antar tombol */
+            width: 100%; /* Agar container tombol memenuhi lebar penuh */
+        }
+
+        /* Menata tombol agar masing-masing mengambil setengah dari lebar container */
+        .button {
+            flex: 1; /* Tombol akan membagi ruang container secara merata */
+        }
+
+        /* Agar tombol mengambil 100% lebar kontainer dalam button */
+        .button button {
+            width: 100%; /* Tombol akan mengambil seluruh lebar kontainer */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title" style="text-align: center;">PENILAIAN MUNAQASYAH TPQ TAHAP 2 TAHUN 2025 - TIM A</div>
+        <div class="content">
+            <form id="nilaiForm">
+                <div class="input-box">
+                    <label for="Jenis_Penilaian" class="form-label">Jenis Penilaian</label>
+                    <select type="text" id="countySel" name="Jenis_Penilaian" class="form-control" placeholder="Masukan jenis penilaian" required>
+                        <option value="" selected="selected">--Pilih jenis penilaian--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nama_TPQ" class="form-label">Nama TPQ</label>
+                    <select type="text" id="stateSel" name="Nama_TPQ" class="form-control" placeholder="Masukan nama TPQ" required>
+                        <option value="" selected="selected">--Pilih nama TPQ--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nama_Santri" class="form-label">Nomor dan Nama Santri</label>
+                    <select type="text" id="districtSel" name="Nama_Santri" class="form-control" placeholder="Masukan nama santri" required>
+                        <option value="" selected="selected">--Pilih nama santri--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nilai" class="form-label">Nilai</label>
+                    <input type="number" id="Nilai" name="Nilai" min="0" max="99" class="form-control" placeholder="Masukkan nilai dari 0 - 99" required>
+                </div>
+                <div class="button">
+                    <input type="submit" value="Kirim Nilai" class="btn btn-primary">
+                </div>
+            </form>
+
+            <!-- Tombol Cek Nilai Kelompok A dan Kelompok B -->
+            <div class="button-container">
+                <div class="button">
+                    <button id="cekNilaiA" class="btn btn-secondary" onclick="window.open('https://script.google.com/macros/s/AKfycbzHZLGi9EDuwRT5cUszhjMB4Rs78V8fQBmBg4i3FPE8GwnGveRTV6QzZfyFwFAFkpeK/exec?template=tampil1&sheet=KELOMPOK%20A')">Cek Nilai Kelompok A</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Dialog Box (Hidden initially) -->
+    <div id="overlay"></div>
+    <div id="dialogBox">
+        <p id="dialogMessage">Mengirim data, mohon tunggu...</p>
+    </div>
+
+    <!-- Include your external script here -->
+    <script src="timA.js"></script>
+
+    <script>
+        const form = document.getElementById('nilaiForm');
+        const dialogBox = document.getElementById('dialogBox');
+        const overlay = document.getElementById('overlay');
+        const dialogMessage = document.getElementById('dialogMessage');
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwUPbcmfQlKrv4pr_ElTpBVSK95MO5_STOz4XLbNB2lowISozIWoC5jlpdY9-lACPgS/exec';
+
+        // Validasi input Nilai
+        const inputBox = document.getElementById('Nilai');
+        inputBox.addEventListener('input', function () {
+            // Batasi input menjadi dua digit dan hanya angka
+            let value = this.value;
+            if (value.length > 2) {
+                value = value.slice(0, 2);  // Ambil dua digit pertama
+            }
+
+            // Pastikan nilai berada di antara 0 dan 99
+            const parsedValue = parseInt(value, 10);
+            if (parsedValue < 0 || parsedValue > 99) {
+                this.setCustomValidity('Nilai harus antara 0 sampai 99.');
+            } else {
+                this.setCustomValidity('');
+            }
+
+            // Perbarui nilai input
+            this.value = value;
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Mencegah refresh halaman
+            const formData = new FormData(form);
+
+            // Tampilkan dialog box
+            dialogMessage.textContent = 'Mengirim data, mohon tunggu...';
+            dialogBox.style.display = 'block';
+            overlay.style.display = 'block';
+
+            try {
+                const response = await fetch(scriptURL, { method: 'POST', body: formData });
+
+                if (response.ok) {
+                    dialogMessage.textContent = 'Data Berhasil Terkirim!';
+                } else {
+                    dialogMessage.textContent = 'Data Gagal Dikirim. Silakan coba lagi.';
+                }
+
+                // Setelah 2 detik, sembunyikan dialog box
+                setTimeout(() => {
+                    dialogBox.style.display = 'none';
+                    overlay.style.display = 'none';
+                }, 2000); // Hilangkan setelah 2 detik
+            } catch (error) {
+                dialogMessage.textContent = 'Terjadi kesalahan: ' + error.message;
+
+                // Setelah 2 detik, sembunyikan dialog box
+                setTimeout(() => {
+                    dialogBox.style.display = 'none';
+                    overlay.style.display = 'none';
+                }, 2000); // Hilangkan setelah 2 detik
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

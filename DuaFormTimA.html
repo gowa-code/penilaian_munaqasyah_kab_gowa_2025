@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>PENILAIAN MUNAQASYAH TPQ GOWA</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        /* Dialog Box */
+        #dialogBox {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 10px;
+            display: none;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        /* Overlay for Background */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+
+        /* Style for Form Layout */
+        .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .form-box {
+            flex: 1;
+            min-width: 45%;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .form-box h4 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .form-box {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title" style="text-align: center;">PENILAIAN MUNAQASYAH TPQ TAHAP 2 TAHUN 2025</div>
+        <div class="form-container">
+            <!-- Form 1 -->
+            <form id="form1" class="form-box" onsubmit="handleFormSubmit(event, 1)">
+                <h4>Form Penilaian 1</h4>
+                <div class="input-box">
+                    <label for="Jenis_Penilaian" class="form-label">Jenis Penilaian</label>
+                    <select id="countySel1" name="Jenis_Penilaian" class="form-control" required>
+                        <option value="" selected>--Pilih jenis penilaian--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nama_TPQ1" class="form-label">Nama TPQ</label>
+                    <select id="stateSel1" name="Nama_TPQ" class="form-control" required>
+                        <option value="" selected>--Pilih nama TPQ--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nama_Santri1" class="form-label">Nomor dan Nama Santri</label>
+                    <select id="districtSel1" name="Nama_Santri" class="form-control" required>
+                        <option value="" selected>--Pilih nama santri--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nilai1" class="form-label">Nilai</label>
+                    <input type="number" id="Nilai" name="Nilai" min="0" max="99" class="form-control" placeholder="Masukkan nilai dari 0 - 99" required>
+                </div>
+                <div class="button">
+                    <input type="submit" value="Kirim Nilai Dinul Islam" class="btn btn-primary">
+                </div>
+            </form>
+
+            <!-- Form 2 -->
+            <form id="form2" class="form-box" onsubmit="handleFormSubmit(event, 2)">
+                <h4>Form Penilaian 2</h4>
+                <div class="input-box">
+                    <label for="Jenis_Penilaian2" class="form-label">Jenis Penilaian</label>
+                    <select id="countySel2" name="Jenis_Penilaian" class="form-control" required>
+                        <option value="" selected>--Pilih jenis penilaian--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nama_TPQ2" class="form-label">Nama TPQ</label>
+                    <select id="stateSel2" name="Nama_TPQ" class="form-control" required>
+                        <option value="" selected>--Pilih nama TPQ--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nama_Santri2" class="form-label">Nomor dan Nama Santri</label>
+                    <select id="districtSel2" name="Nama_Santri" class="form-control" required>
+                        <option value="" selected>--Pilih nama santri--</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="Nilai2" class="form-label">Nilai</label>
+                    <input type="number" id="Nilai" name="Nilai" min="0" max="99" class="form-control" placeholder="Masukkan nilai dari 0 - 99" required>
+                </div>
+                <div class="button">
+                    <input type="submit" value="Kirim Nilai Khat" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+
+        <!-- Tombol Cek Nilai -->
+        <div class="button mt-4" style="text-align: center;">
+            <button id="cekNilai" class="btn btn-secondary" onclick="window.open('https://script.google.com/macros/s/AKfycbzHZLGi9EDuwRT5cUszhjMB4Rs78V8fQBmBg4i3FPE8GwnGveRTV6QzZfyFwFAFkpeK/exec?template=tampil1&sheet=KELOMPOK%20A')">Cek Nilai</button>
+        </div>
+    </div>
+
+    <!-- Dialog Box (Hidden initially) -->
+    <div id="overlay"></div>
+    <div id="dialogBox">
+        <p id="dialogMessage">Mengirim data, mohon tunggu...</p>
+    </div>
+
+    <!-- Include your external script here -->
+    <script src="DuaFormTimA.js"></script>
+
+    <script>
+        // Restrict input to only two digits for the 'Nilai' field
+        document.querySelectorAll('input[name="Nilai"]').forEach(input => {
+            input.addEventListener('input', function(event) {
+                let value = event.target.value;
+
+                // If value exceeds two digits, truncate it to two digits
+                if (value.length > 2) {
+                    event.target.value = value.slice(0, 2);
+                }
+            });
+        });
+
+        const dialogBox = document.getElementById('dialogBox');
+        const overlay = document.getElementById('overlay');
+        const dialogMessage = document.getElementById('dialogMessage');
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwUPbcmfQlKrv4pr_ElTpBVSK95MO5_STOz4XLbNB2lowISozIWoC5jlpdY9-lACPgS/exec';
+
+        // Event listener for Form 1
+        document.getElementById('form1').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent form refresh
+            const formData = new FormData(e.target);
+
+            // Show dialog box while sending data
+            dialogMessage.textContent = 'Mengirim data, mohon tunggu...';
+            dialogBox.style.display = 'block';
+            overlay.style.display = 'block';
+
+            try {
+                const response = await fetch(scriptURL, { method: 'POST', body: formData });
+
+                if (response.ok) {
+                    dialogMessage.textContent = 'Data Berhasil Terkirim!';
+                } else {
+                    dialogMessage.textContent = 'Data Gagal Dikirim. Silakan coba lagi.';
+                }
+
+                // Hide the dialog box after 2 seconds
+                setTimeout(() => {
+                    dialogBox.style.display = 'none';
+                    overlay.style.display = 'none';
+                }, 2000); // Hide after 2 seconds
+            } catch (error) {
+                dialogMessage.textContent = 'Terjadi kesalahan: ' + error.message;
+
+                // Hide the dialog box after 2 seconds
+                setTimeout(() => {
+                    dialogBox.style.display = 'none';
+                    overlay.style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        // Event listener for Form 2
+        document.getElementById('form2').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent form refresh
+            const formData = new FormData(e.target);
+
+            // Show dialog box while sending data
+            dialogMessage.textContent = 'Mengirim data, mohon tunggu...';
+            dialogBox.style.display = 'block';
+            overlay.style.display = 'block';
+
+            try {
+                const response = await fetch(scriptURL, { method: 'POST', body: formData });
+
+                if (response.ok) {
+                    dialogMessage.textContent = 'Data Berhasil Terkirim!';
+                } else {
+                    dialogMessage.textContent = 'Data Gagal Dikirim. Silakan coba lagi.';
+                }
+
+                // Hide the dialog box after 2 seconds
+                setTimeout(() => {
+                    dialogBox.style.display = 'none';
+                    overlay.style.display = 'none';
+                }, 2000); // Hide after 2 seconds
+            } catch (error) {
+                dialogMessage.textContent = 'Terjadi kesalahan: ' + error.message;
+
+                // Hide the dialog box after 2 seconds
+                setTimeout(() => {
+                    dialogBox.style.display = 'none';
+                    overlay.style.display = 'none';
+                }, 2000);
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
